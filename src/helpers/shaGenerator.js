@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { encryptionConstants } = require("./constants/encryptionConstants");
+const { encryptionConstants } = require("../constants/encryptionConstants");
 
 //eslint-disable-next-line
 process.argv.splice(2).forEach((val, index, array) => {

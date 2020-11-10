@@ -1,9 +1,0 @@
-{
-  "users": [
-    { "email": "manel", "hPass": 123456 },
-    { "email": "manel1", "hPass": 123226 },
-    { "email": "manel2", "hPass": 123336 },
-    { "email": "manel3", "hPass": 123446 },
-    { "email": "manel4", "hPass": 123556 }
-  ]
-}

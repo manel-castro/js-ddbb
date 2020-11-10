@@ -15,7 +15,6 @@ exports.getFileData = (fileName) => {
 
 exports.appendDataOnFile = (fileName, fileData, dataToWrite) => {
   // dataToWrite must be an object
-  //  console.log(parsedData);
   const data = clone(fileData);
 
   data.users.push(dataToWrite);

@@ -1,39 +1,12 @@
 const app = require("express")();
-//const crypto = require("crypto");
-//const fs = require("fs");
-//const clone = require("rfdc")();
-const port = 8081;
+const { serverConstants } = require("./src/constants/serverConstants");
+const handleUser = require("./src/handlers/handleUser");
+const handleDocument = require("./src/handlers/handleDocument");
 
-//const {
-//  getFileData,
-//  appendDataONFile,
-//  updateDataOnFile,
-//} = require("./fileManager");
-//const { createTempToken } = require("./tokenManager");
+app.get("/", (req, res) => res.send("Created by Manel Castro."));
+app.use("/users", handleUser);
+app.use("/documents", handleDocument);
 
-const userManager = require("./userManager");
-
-// creating a SHA256 hash from seed.
-//const sha256 = crypto.createHash("sha256");
-//const hash = sha256.update("Hello world").digest("base64");
-
-app.use("/users", userManager);
-
-//app.get("/", (req, res) => {
-//  res.send("Hello mate!");
-//});
-//
-//app.post("/login", async (req, res) => {
-//  console.log("Headers");
-//
-//  // TODO. we should validate the request header, and split actions depending if email/password or token.
-//
-//  // Create function "loginWithCredentials"
-//
-//  //If logged with credentials send a token and data requested, if logged with token just send data.
-//  res.status(200).send(session.token);
-//});
-
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+app.listen(serverConstants.SERVER_PORT, () => {
+  console.log(`Listening on port ${serverConstants.SERVER_PORT}`);
 });
