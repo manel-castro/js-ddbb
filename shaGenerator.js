@@ -1,5 +1,7 @@
 const crypto = require("crypto");
+const { encryptionConstants } = require("./constants/encryptionConstants");
 
+//eslint-disable-next-line
 process.argv.splice(2).forEach((val, index, array) => {
   console.log(`Password ${val} has a sha value of:`);
   console.log(shaGenerator(val));
@@ -7,10 +9,13 @@ process.argv.splice(2).forEach((val, index, array) => {
 
 function shaGenerator(password) {
   //const password = "123336";
-
-  return (hashedValue = crypto
-    .createHash("sha256")
+  const hashedPass = crypto
+    .createHash(encryptionConstants.PASSWORD_ENCRYPTION)
     .update(password, "utf8")
     .digest()
-    .toString("hex"));
+    .toString("hex");
+
+  //encrypt token with user password. Only send and recive encrypted token.
+
+  return hashedPass;
 }

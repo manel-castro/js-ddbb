@@ -1,56 +1,97 @@
 const crypto = require("crypto");
-const { createTempToken, decodeToken } = require("./tokenManager");
+const { createTempToken } = require("./tokenManager");
 const { getFileData, updateDataOnFile } = require("./fileManager");
+const { encryptionConstants } = require("./constants/encryptionConstants");
+const { ddbbConstants } = require("./constants/ddbbConstants");
+const { errorConstants } = require("./constants/errorConstants");
+const {
+  SOMETHING_GONE_WRONG,
+  BAD_CREDENTIALS,
+  EMAIL_BADLY_FORMATTED,
+} = errorConstants;
+const { validateEmail, validatePassword } = require("./helpers/javascript");
 
+// It only manages login requests based on user credentials Email and Password
 const handleLogin = async (req, res) => {
   const utf8 = req.headers.authorization || "";
-  try {
-		//if there is a token it will decode it. 
-    decodeToken(utf8);
-  } catch (err) {
-    res.status(401).send(err);
-    return;
-  }
+
+  //const isToken = utf8.split(" ")[0] === "Bearer" ? true : false;
+
+  // we'll only decode tokens when accessing to our database
+  // if (isToken) {
+  //   //handleToken(utf8)
+  //   try {
+  //     //if there is a token it will decode it.
+  //     decodeToken(utf8);
+  //   } catch (err) {
+  //     res.status(401).send(err);
+  //     return;
+  //   }
+  // }
   var email = utf8.split(":");
   var password = email.splice(1, email.length).join(":");
   email = email[0];
 
-  const fileData = getFileData("user.json");
+  //validate email
+  // Email should come in base64
+  if (!validateEmail(email)) {
+    res.status(EMAIL_BADLY_FORMATTED.code).send(EMAIL_BADLY_FORMATTED.message);
+  }
 
-  const found = fileData.users.find((item) => item.email === email);
-
-  console.log("found debugger: ", found);
-
-  const buf = Buffer.from(found.hPass, "hex"); //eslint-disable-line
-  const buf2 = Buffer.from(password, "hex"); //eslint-disable-line
-
-  //the next comparison should consider time attacks.
-  console.log("Password byteLength: ", buf.byteLength);
-  if (buf.byteLength !== buf2.byteLength) {
-    res.status(400).send("Something gone wrong");
+  // Validates if the password is properly formated as some kind of SHA.
+  try {
+    validatePassword(password, encryptionConstants.PASSWORD_ENCRYPTION);
+  } catch (err) {
+    res.status(err.code).send(err.message);
     return;
   }
 
-  console.log("BUF: ", buf);
-  console.log("BUF2: ", buf2);
-  const authorized = crypto.timingSafeEqual(buf, buf2);
+  const fileData = getFileData(ddbbConstants.USERS_FILE);
+  const found = fileData.users.find((item) => item.email === email);
+  if (!found) {
+    res.status(SOMETHING_GONE_WRONG.code).send(SOMETHING_GONE_WRONG.message);
+    return;
+  }
+
+  const bufLocalPass = Buffer.from(found.hPass, "hex"); //eslint-disable-line
+  const bufReqPass = Buffer.from(password, "hex"); //eslint-disable-line
+
+  //the next comparison should consider time attacks.
+  if (bufLocalPass.byteLength !== bufReqPass.byteLength) {
+    res.status(SOMETHING_GONE_WRONG.code).send(SOMETHING_GONE_WRONG.message);
+    return;
+  }
+
+  const authorized = crypto.timingSafeEqual(bufReqPass, bufLocalPass);
   if (!authorized) {
-    res.status(401).send("Bad credentials");
+    res.status(BAD_CREDENTIALS.code).send(BAD_CREDENTIALS.message);
     return;
   }
 
   //create and assign token
   const session = await createTempToken();
-  console.log("SESSION");
-  console.log(session);
   updateDataOnFile(
-    "user.json",
+    ddbbConstants.USERS_FILE,
     fileData,
     { property: "email", value: email },
     { session }
   );
 
-  res.status(200).send(session.token);
+  // trying to encrypt token. Should use AES or any kind of public key of the user. There are some kinds of handshakes too.
+  // crypto
+  //   .createHash(encryptionConstants.PASSWORD_ENCRYPTION)
+  //   .update(password, "utf8")
+  //   .digest()
+  //   .toString("hex");
+
+  // control for new users comming from CreateAccount
+  if (req.isNewUser) {
+    res.status(200).send({ message: "Account Created.", token: session.token });
+  }
+
+  res
+    .status(200)
+    .send({ message: "Logged in successfully.", token: session.token });
 };
 
 module.exports = handleLogin;
