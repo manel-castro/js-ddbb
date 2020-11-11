@@ -10,7 +10,7 @@ process.argv.splice(2).forEach((val, index, array) => {
 function shaGenerator(password) {
   //const password = "123336";
   const hashedPass = crypto
-    .createHash(encryptionConstants.PASSWORD_ENCRYPTION)
+    .createHash("SHA1")
     .update(password, "utf8")
     .digest()
     .toString("hex");

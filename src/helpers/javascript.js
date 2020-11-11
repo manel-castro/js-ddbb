@@ -1,4 +1,5 @@
 const { errorConstants } = require("../constants/errorConstants");
+const clone = require("rfdc")();
 
 exports.validateEmail = (email) => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; //eslint-disable-line
@@ -29,4 +30,12 @@ exports.validatePassword = (password, passwordEncryption) => {
   }
 
   return true;
+};
+
+exports.deepNestFind = async (property, value, nestedObj) => {
+  for (let i in nestedObj) {
+    if (nestedObj[i][property] === value) {
+      return await clone(nestedObj[i]);
+    }
+  }
 };

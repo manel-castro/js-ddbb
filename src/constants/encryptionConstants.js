@@ -1,4 +1,5 @@
 exports.encryptionConstants = {
   TOKEN_BYTES: 32,
   PASSWORD_ENCRYPTION: "SHA1",
+  DOCUMENT_DEFAULT_ID_LENGTH: 10,
 };

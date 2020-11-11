@@ -1,15 +1,16 @@
 const fs = require("fs");
 const clone = require("rfdc")();
 
-exports.getFileData = (fileName) => {
-  const fileData = fs.readFileSync(fileName, (err, data) => {
+exports.getFileData = async (fileName) => {
+  const fileData = await fs.readFileSync(fileName, (err, data) => {
     if (err) {
+      console.log(err);
       throw err;
     }
     return JSON.parse(data);
   });
 
-  const parsedData = JSON.parse(fileData);
+  const parsedData = clone(JSON.parse(fileData));
   return parsedData;
 };
 

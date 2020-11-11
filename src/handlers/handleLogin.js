@@ -36,7 +36,7 @@ const handleLogin = async (req, res) => {
   }
 
   // FIND USER EMAIL
-  const fileData = getFileData(ddbbConstants.USERS_FILE);
+  const fileData = await getFileData(ddbbConstants.USERS_FILE);
   const found = fileData.users.find((item) => item.email === email);
   if (!found) {
     res.status(SOMETHING_GONE_WRONG.code).send(SOMETHING_GONE_WRONG.message);

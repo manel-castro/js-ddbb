@@ -32,7 +32,7 @@ const handleCreateUser = async (req, res) => {
   //const bufReqPass = Buffer.from(password, "hex"); //eslint-disable-line
 
   // CHECK MAIL AVAILABILITY
-  const fileData = getFileData(ddbbConstants.USERS_FILE);
+  const fileData = await getFileData(ddbbConstants.USERS_FILE);
   const found = fileData.users.find((item) => item.email === email);
   if (found) {
     res.status(EMAIL_ALREADY_EXISTS.code).send(EMAIL_ALREADY_EXISTS.message);
