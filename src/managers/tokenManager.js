@@ -32,7 +32,7 @@ exports.createTempToken = async (email) => {
 const decodeToken = async (utf8) => {
   const header = utf8.split(" ");
   //  if (header[0] !== "Bearer") throw errorConstants.BAD_CREDENTIALS;
-}
+
   //  console.log("HEader 1", Buffer.from(header[1], "hex").byteLength); //eslint-disable-line
 
   const decodedToken = header[1].split(":");
@@ -56,7 +56,7 @@ exports.authToken = async (token) => {
 
   const fileData = await getFileData(ddbbConstants.USERS_FILE);
 
-  const userData = await deepNestFind("email", email, fileData.users);
+  const userData = await deepNestFind("email", email, fileData);
   console.log("Authorizing user: ", userData.email);
   let localDecodedToken = await decodeToken(userData.session.token);
 

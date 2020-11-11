@@ -1,1 +1,46 @@
-{"users":[{"email":"mane1l@mail.com","hPass":"7b21848ac9af35be0ddb2d6b9fc3851934db8420","session":{"token":"Bearer mane1l@mail.com:4d32f157ad4662c3d409c4a2f6e08f3ac09074fdf4994b5277d8f9f93b4336ae","dateCreated":"2020-11-11T11:25:48.096Z"}},{"email":"manes1l@mail.com","hPass":"7b21848ac9af35be0ddb2d6b9fc3851934db8420","session":{"token":"Bearer manes1l@mail.com:e4ad25b9920ab34cdbd19689665a71a9f577253a362ce8b0c3cebc13b972a70b","dateCreated":"2020-11-11T11:25:51.302Z"}},{"email":"manel@mail.com","hPass":"7b21848ac9af35be0ddb2d6b9fc3851934db8420","session":{"token":"Bearer manel@mail.com:652b3f28fbe3435ec221afe5eaa476291c81ba9d8f14e50432d172d2882e04ee","dateCreated":"2020-11-11T11:25:54.992Z"}}]}
+[
+    {
+        "email": "mane1l@mail.com",
+        "hPass": "7b21848ac9af35be0ddb2d6b9fc3851934db8420",
+        "session": {
+            "token": "Bearer mane1l@mail.com:4d32f157ad4662c3d409c4a2f6e08f3ac09074fdf4994b5277d8f9f93b4336ae",
+            "dateCreated": "2020-11-11T11:25:48.096Z"
+        }
+    },
+    {
+        "email": "manes1l@mail.com",
+        "hPass": "7b21848ac9af35be0ddb2d6b9fc3851934db8420",
+        "session": {
+            "token": "Bearer manes1l@mail.com:e4ad25b9920ab34cdbd19689665a71a9f577253a362ce8b0c3cebc13b972a70b",
+            "dateCreated": "2020-11-11T11:25:51.302Z"
+        }
+    },
+    {
+        "email": "manel@mail.com",
+        "hPass": "7b21848ac9af35be0ddb2d6b9fc3851934db8420",
+        "session": {
+            "token": "Bearer manel@mail.com:652b3f28fbe3435ec221afe5eaa476291c81ba9d8f14e50432d172d2882e04ee",
+            "dateCreated": "2020-11-11T11:25:54.992Z"
+        }
+    },
+    {
+        "email": "mane12l@mail.com",
+        "hPass": "7b21848ac9af35be0ddb2d6b9fc3851934db8420"
+    },
+    {
+        "email": "mane112l@mail.com",
+        "hPass": "7b21848ac9af35be0ddb2d6b9fc3851934db8420"
+    },
+    {
+        "email": "man1e112l@mail.com",
+        "hPass": "7b21848ac9af35be0ddb2d6b9fc3851934db8420"
+    },
+    {
+        "email": "maan1e112l@mail.com",
+        "hPass": "7b21848ac9af35be0ddb2d6b9fc3851934db8420",
+        "session": {
+            "token": "Bearer maan1e112l@mail.com:a72996929d2a06ef413186d2dcdde46359a6f119d24ed84ac8a44b0df54e1383",
+            "dateCreated": "2020-11-11T16:25:45.176Z"
+        }
+    }
+]

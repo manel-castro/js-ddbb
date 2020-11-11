@@ -7,4 +7,9 @@ exports.ddbbConstants = {
     __dirname,
     "../../database/documents/documents.json"
   ),
+  DELETED_DOCUMENTS_FILE: path.resolve(
+    //eslint-disable-next-line
+    __dirname,
+    "../../database/documents/deletedDocuments.json"
+  ),
 };

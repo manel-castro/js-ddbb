@@ -1,14 +1,19 @@
 const crypto = require("crypto");
 
-const { getFileData, appendDataOnFile } = require("../managers/fileManager");
+const { getFileData, updateDataOnFile } = require("../managers/fileManager");
 const { decodeToken, authToken } = require("../managers/tokenManager");
 
 const { encryptionConstants } = require("../constants/encryptionConstants");
 const { ddbbConstants } = require("../constants/ddbbConstants");
 const { errorConstants } = require("../constants/errorConstants");
-const { ID_ALREADY_EXISTS, BAD_CREDENTIALS } = errorConstants;
+const {
+  BODY_REQUEST_MISSING,
+  BAD_CREDENTIALS,
+  UNAUTHORIZED,
+  SOMETHING_GONE_WRONG,
+} = errorConstants;
 
-const handleCreateDocument = async (req, res) => {
+const handleModifyDocument = async (req, res) => {
   // AUTHORIZE USER
   const utf8 = req.headers.authorization || "";
 
@@ -32,48 +37,51 @@ const handleCreateDocument = async (req, res) => {
 
   // CREATE NEW DOCUMENT
   const reqDocument = req.body;
-  const fileData = await getFileData(ddbbConstants.DOCUMENTS_FILE);
-
   console.log("RECEIVED DOCUMENT: ");
   console.log(reqDocument);
 
   const userCreator = authorized.user;
 
+  if (reqDocument.body === undefined) {
+    res.status(BODY_REQUEST_MISSING.code).send(BODY_REQUEST_MISSING.message);
+    return;
+  }
+  let documentBody = reqDocument.body;
+
   let documentId = reqDocument.id;
   if (documentId === undefined) {
-    documentId = await crypto
-      .randomBytes(encryptionConstants.DOCUMENT_DEFAULT_ID_LENGTH)
-      .toString("hex");
-  } else {
-
-    const idAlreadyExists = fileData.some(item => item.id === documentId)
-    if (idAlreadyExists) {
-      res.status(ID_ALREADY_EXISTS.code).send(ID_ALREADY_EXISTS.message)
-      return;
-    }
+    res.status(UNAUTHORIZED.code).send(UNAUTHORIZED.message);
+    return;
   }
 
-  let documentBody = "";
-  if (reqDocument.body) {
-    documentBody = reqDocument.body;
+  const fileData = await getFileData(ddbbConstants.DOCUMENTS_FILE);
+
+  let itemToModify = fileData.find((item) => item.id === documentId);
+
+  if (itemToModify.user !== userCreator) {
+    res.status(UNAUTHORIZED.code).send(UNAUTHORIZED.message);
+    return;
   }
 
-  let documentDate = new Date(Date.now());
+  let modificationDate = new Date(Date.now());
 
   const newDocument = {
-    user: userCreator,
-    id: documentId,
     body: documentBody,
-    timestamp: documentDate,
+    lastModification: modificationDate,
   };
 
   console.log("NEW DOCUMENT IS");
   console.log(newDocument);
 
   console.log("FILEDATA___", fileData);
-  appendDataOnFile(ddbbConstants.DOCUMENTS_FILE, fileData, newDocument);
+  await updateDataOnFile(
+    ddbbConstants.DOCUMENTS_FILE,
+    fileData,
+    { property: "id", value: itemToModify.id },
+    newDocument
+  );
 
-  res.status(200).send(`Document created with id ${documentId}.`);
+  res.status(200).send(`Document with id ${documentId} modified successfully.`);
 };
 
-module.exports = handleCreateDocument;
+module.exports = handleModifyDocument;

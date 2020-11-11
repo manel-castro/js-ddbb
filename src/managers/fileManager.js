@@ -18,7 +18,7 @@ exports.appendDataOnFile = (fileName, fileData, dataToWrite) => {
   // dataToWrite must be an object
   const data = clone(fileData);
 
-  data.users.push(dataToWrite);
+  data.push(dataToWrite);
 
   fs.writeFileSync(fileName, JSON.stringify(data), (err) => {
     if (err) throw err;
@@ -32,15 +32,31 @@ exports.updateDataOnFile = (
   dataToWrite
 ) => {
   // dataToWrite must be an object
-  const data = clone(fileData);
+  const clonedData = clone(fileData);
 
-  data.users = fileData.users.map((item) => {
+  const result = clonedData.map((item) => {
     return item[propertyToMatch.property] !== propertyToMatch.value
       ? item
       : { ...item, ...dataToWrite };
   });
 
-  fs.writeFileSync(fileName, JSON.stringify(data), (err) => {
+  fs.writeFileSync(fileName, JSON.stringify(result), (err) => {
+    if (err) throw err;
+  });
+};
+
+
+exports.deleteDataOnFile = (
+  fileName,
+  fileData,
+  propertyToMatch,
+) => {
+  // dataToWrite must be an object
+  const clonedData = clone(fileData);
+
+  const result = clonedData.filter((item) => item[propertyToMatch.property] !== propertyToMatch.value);
+
+  fs.writeFileSync(fileName, JSON.stringify(result), (err) => {
     if (err) throw err;
   });
 };

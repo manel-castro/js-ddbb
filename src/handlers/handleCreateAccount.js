@@ -33,7 +33,7 @@ const handleCreateUser = async (req, res) => {
 
   // CHECK MAIL AVAILABILITY
   const fileData = await getFileData(ddbbConstants.USERS_FILE);
-  const found = fileData.users.find((item) => item.email === email);
+  const found = fileData.find((item) => item.email === email);
   if (found) {
     res.status(EMAIL_ALREADY_EXISTS.code).send(EMAIL_ALREADY_EXISTS.message);
     return;
