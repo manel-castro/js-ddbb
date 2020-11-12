@@ -11,48 +11,54 @@ const constants = {
   },
 };
 
-const login = async (email, password) => {
-  const api = constants.apiConstants.apiKey + "users/login";
+module.exports = {
+  login: async (email, password) => {
+    const api = constants.apiConstants.apiKey + "users/login";
 
-  // SET UP CREDENTIALS HEADER
-  const hashedPass = await crypto
-    .createHash("SHA1")
-    .update(password, "utf8")
-    .digest()
-    .toString("hex");
-  const credentials = email + ":" + hashedPass;
+    // SET UP CREDENTIALS HEADER
+    const hashedPass = await crypto
+      .createHash("SHA1")
+      .update(password, "utf8")
+      .digest()
+      .toString("hex");
+    const credentials = email + ":" + hashedPass;
 
-  const axiosRequest = {
-    method: "post",
-    url: api,
-    data: {},
-    headers: {"Authorization": credentials }, //prettier-ignore
-  };
+    const axiosRequest = {
+      method: "post",
+      url: api,
+      data: {},
+      headers: {"Authorization": credentials }, //prettier-ignore
+    };
 
-  axios(axiosRequest)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
-};
+    await axios(axiosRequest)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        throw err;
+      });
+  },
 
-exports.createAccount = async (email, password) => {
-  const api = constants.apiConstants.apiKey + "users/login";
+  createAccount: async (email, password) => {
+    const api = constants.apiConstants.apiKey + "users/login";
 
-  // SET UP CREDENTIALS HEADER
-  const hashedPass = await crypto
-    .createHash("SHA1")
-    .update(password, "utf8")
-    .digest()
-    .toString("hex");
-  const credentials = email + ":" + hashedPass;
+    // SET UP CREDENTIALS HEADER
+    const hashedPass = await crypto
+      .createHash("SHA1")
+      .update(password, "utf8")
+      .digest()
+      .toString("hex");
+    const credentials = email + ":" + hashedPass;
 
-  const axiosRequest = {
-    method: "post",
-    url: api,
-    data: {},
-    headers: {"Authorization": credentials }, //prettier-ignore
-  };
+    const axiosRequest = {
+      method: "post",
+      url: api,
+      data: {},
+      headers: {"Authorization": credentials }, //prettier-ignore
+    };
 
-  axios(axiosRequest)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
+    axios(axiosRequest)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  },
 };
