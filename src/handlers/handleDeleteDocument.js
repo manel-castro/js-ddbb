@@ -19,14 +19,12 @@ const handleDeleteDocument = async (req, res) => {
 
   let authorized;
 
-  await authToken(utf8)
-    .then((auth) => {
-      authorized = auth;
-    })
-    .catch((err) => {
-      res.status(err.code).send(err.message);
-      throw err;
-    });
+  try {
+    authorized = await authToken(utf8)
+  } catch (err) {
+    res.status(err.code).send(err.message);
+    return;
+  }
 
   console.log("Is user authorized? ", authorized);
 

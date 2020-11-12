@@ -1,11 +1,11 @@
 const crypto = require("crypto");
 
 const { getFileData } = require("./fileManager");
-const { deepNestFind } = require("../helpers/javascript");
+const { deepNestFind, validateEmail } = require("../helpers/javascript");
 
-const { errorConstants } = require("../constants/errorConstants");
 const { encryptionConstants } = require("../constants/encryptionConstants");
 const { ddbbConstants } = require("../constants/ddbbConstants");
+const { errorConstants } = require("../constants/errorConstants");
 
 exports.createTempToken = async (email) => {
   // TOKEN DATA CREATION
@@ -31,49 +31,47 @@ exports.createTempToken = async (email) => {
 
 const decodeToken = async (utf8) => {
   const header = utf8.split(" ");
-  //  if (header[0] !== "Bearer") throw errorConstants.BAD_CREDENTIALS;
-
-  //  console.log("HEader 1", Buffer.from(header[1], "hex").byteLength); //eslint-disable-line
+  if (header[0] !== "Bearer") throw errorConstants.BAD_CREDENTIALS; // Check that reqToken contains "Bearer "
 
   const decodedToken = header[1].split(":");
-  //const email = decodedToken[0];
-  //const token = decodedToken[1];
 
-  //eslint-disable-next-line
-  // const passBuf = await Buffer.from(token, "hex");
-  // if (passBuf.byteLength !== encryptionConstants.TOKEN_BYTES) {
-  //   throw errorConstants.BAD_CREDENTIALS;
-  // }
   return decodedToken;
 };
 
 exports.authToken = async (token) => {
   console.log("___TOKEN RECEIVED___");
   console.log("Checking...");
-  let reqDecodedToken = await decodeToken(token);
+  let reqDecodedToken = await decodeToken(token).catch(err => {
+    throw err
+  });
 
   const email = reqDecodedToken[0];
+  if (!validateEmail(email)) throw errorConstants.BAD_CREDENTIALS // Check email properly formatted
 
   const fileData = await getFileData(ddbbConstants.USERS_FILE);
+  const userData = await deepNestFind("email", email, fileData); // Get local userData by email
 
-  const userData = await deepNestFind("email", email, fileData);
   console.log("Authorizing user: ", userData.email);
+
+  // CHECK TOKEN EXPIRATION 
+  let dateCreationToken = userData.session.dateCreated;
+  let dateExpirationToken = new Date(dateCreationToken);
+  dateExpirationToken.setTime(dateExpirationToken.getTime() + encryptionConstants.EXPIRE_TOKEN_TIME * 60 * 60 * 1000)
+  let dateNow = new Date(Date.now())
+
+  if (dateNow.getTime() > dateExpirationToken.getTime()) {
+    console.log("TOKEN EXPIRED")
+    throw errorConstants.TOKEN_EXPIRED;
+  }
+
+  // COMPARE REQUESTED AND LOCAL TOKENS
   let localDecodedToken = await decodeToken(userData.session.token);
-
-  // await decodeToken(userData.session.token)
-  //   .then((token) => {
-  //     localDecodedToken = token;
-  //   })
-  //   .catch((err) => {
-  //     throw err;
-  //   });
-
   // eslint-disable-next-line
   const localBufToken = Buffer.from(localDecodedToken[1], "hex");
   // eslint-disable-next-line
   const reqBufToken = Buffer.from(reqDecodedToken[1], "hex");
 
-  if (localBufToken.byteLength !== reqBufToken.byteLength) {
+  if (localBufToken.byteLength !== reqBufToken.byteLength) { // Prior check of byteLength to avoid breaking timingSafeEqual()
     console.log(
       "ByteLength doesn't correspond. Request token: ",
       reqBufToken.byteLength,

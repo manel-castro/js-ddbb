@@ -19,14 +19,12 @@ const handleModifyDocument = async (req, res) => {
 
   let authorized;
 
-  await authToken(utf8)
-    .then((auth) => {
-      authorized = auth;
-    })
-    .catch((err) => {
-      res.status(err.code).send(err.message);
-      throw err;
-    });
+  try {
+    authorized = await authToken(utf8)
+  } catch (err) {
+    res.status(err.code).send(err.message);
+    return;
+  }
 
   console.log("Is user authorized? ", authorized);
 
@@ -56,12 +54,19 @@ const handleModifyDocument = async (req, res) => {
 
   const fileData = await getFileData(ddbbConstants.DOCUMENTS_FILE);
 
+  // Check that document exists
   let itemToModify = fileData.find((item) => item.id === documentId);
+  if (itemToModify === undefined) {
+    res.status(UNAUTHORIZED.code).send(UNAUTHORIZED.message);
+    return;
+  }
 
+  // Check that user is the owner of document to modify
   if (itemToModify.user !== userCreator) {
     res.status(UNAUTHORIZED.code).send(UNAUTHORIZED.message);
     return;
   }
+
 
   let modificationDate = new Date(Date.now());
 
@@ -74,7 +79,7 @@ const handleModifyDocument = async (req, res) => {
   console.log(newDocument);
 
   console.log("FILEDATA___", fileData);
-  await updateDataOnFile(
+  updateDataOnFile(
     ddbbConstants.DOCUMENTS_FILE,
     fileData,
     { property: "id", value: itemToModify.id },

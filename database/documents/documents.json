@@ -1,1 +1,45 @@
-[{"user":"manel@mail.com","id":"81c8f74fd718bf2d10f5","body":"HEEaaaE212214123EEy","timestamp":"2020-11-11T16:28:24.696Z","lastModification":"2020-11-11T17:18:05.191Z"}]
+[
+    {
+        "user": "manel@gmail.com",
+        "id": "81c8f74fd718bf2d10fs",
+        "body": "Something new",
+        "timestamp": "2020-11-12T07:46:50.257Z"
+    },
+    {
+        "user": "manel@gmail.com",
+        "id": "81c8f74fd718bf2d10fs4",
+        "body": "Something new",
+        "timestamp": "2020-11-12T07:55:56.805Z"
+    },
+    {
+        "user": "manel@gmail.com",
+        "id": "3798e4e5383263d130b7",
+        "body": "Something new",
+        "timestamp": "2020-11-12T07:57:53.300Z"
+    },
+    {
+        "user": "manel@gmail.com",
+        "id": "10ab6284caaf842d6a8a",
+        "body": "Something new",
+        "timestamp": "2020-11-12T07:58:20.174Z"
+    },
+    {
+        "user": "manel@gmail.com",
+        "id": "0c6e16f673046b5f9780",
+        "body": "Something new",
+        "timestamp": "2020-11-12T08:02:23.594Z"
+    },
+    {
+        "user": "manel@gmail.com",
+        "id": "47e5e91ba3447c6e6def",
+        "body": "Something new",
+        "timestamp": "2020-11-12T08:03:57.016Z"
+    },
+    {
+        "user": "manel@gmail.com",
+        "id": "ca66aa8fe46245b36180",
+        "body": "Something newasdfasef",
+        "timestamp": "2020-11-12T08:22:55.961Z",
+        "lastModification": "2020-11-12T08:26:20.653Z"
+    }
+]
