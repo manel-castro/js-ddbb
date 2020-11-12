@@ -1,11 +1,14 @@
 const { login } = require("./index.js");
 
-const loginTest = (email, password) => {
-  login(email, password)
-    .then((res) => {
+const loginTest = async (email, password) => {
+  const data = { email: email, password: password };
+  await login(data, function (err, res) {
+    if (err) {
+      console.log(err);
+    } else {
       console.log(res);
-    })
-    .catch((err) => console.log(err));
+    }
+  });
 };
-
+console.log(login);
 loginTest("manel1@gmail.com", "11111");

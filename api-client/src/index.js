@@ -12,7 +12,9 @@ const constants = {
 };
 
 module.exports = {
-  login: async (email, password) => {
+  login: async (data, callback) => {
+    const email = data.email;
+    const password = data.password;
     const api = constants.apiConstants.apiKey + "users/login";
 
     // SET UP CREDENTIALS HEADER
@@ -25,17 +27,19 @@ module.exports = {
 
     const axiosRequest = {
       method: "post",
-      url: api,
+      url: "http://localhost:8081/users/login",
       data: {},
       headers: {"Authorization": credentials }, //prettier-ignore
     };
 
     await axios(axiosRequest)
       .then((res) => {
-        return res;
+        console.log("RES: ", res);
+        callback(null, res);
       })
       .catch((err) => {
-        throw err;
+        console.log("ERR: ", err);
+        callback(err.response);
       });
   },
 

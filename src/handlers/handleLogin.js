@@ -27,6 +27,7 @@ const handleLogin = async (req, res) => {
   // TODO. Email should come in base64
   if (!validateEmail(email)) {
     res.status(EMAIL_BADLY_FORMATTED.code).send(EMAIL_BADLY_FORMATTED.message);
+    return;
   }
   try {
     validatePassword(password, encryptionConstants.PASSWORD_ENCRYPTION);

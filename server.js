@@ -1,8 +1,11 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const { serverConstants } = require("./src/constants/serverConstants");
 const handleUser = require("./src/handlers/handleUser");
 const handleDocument = require("./src/handlers/handleDocument");
+
+app.use(cors());
 
 app.use(express.json());
 
