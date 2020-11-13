@@ -1,6 +1,10 @@
 const axios = require("axios");
 const crypto = require("crypto");
 
+//---------------------
+// TODO. LOGOUT AND ISUSERAUTH
+//---------------------
+
 const constants = {
   apiConstants: {
     apiKey: "http://localhost:8081/",
@@ -74,6 +78,28 @@ module.exports = {
       });
   },
 
+  logout: async (data, callback) => {
+    const api = constants.apiConstants.apiKey + "users/logout";
+    const token = data.token;
+
+    const axiosRequest = {
+      method: "post",
+      url: api,
+      data: {},
+      headers:{"Authorization": token}, //prettier-ignore
+    };
+
+    await axios(axiosRequest)
+      .then((res) => {
+        //    console.log("RES: ", res);
+        callback(null, res);
+      })
+      .catch((err) => {
+        //  console.log("ERR: ", err);
+        callback(err.response);
+      });
+  },
+
   createDocument: async (data, callback) => {
     const token = data.token;
     const id = data.id || undefined;
@@ -98,6 +124,7 @@ module.exports = {
         callback(err.response);
       });
   },
+
   modifyDocument: async (data, callback) => {
     const token = data.token;
     const id = data.id || undefined;

@@ -1,5 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
-const { loginTest, createAccountTest } = require("./userTests");
+const { loginTest, createAccountTest, logoutTest } = require("./userTests");
 const {
   createDocumentTestWithIdAndBody,
   createDocumentTest,
@@ -30,8 +30,9 @@ const testing = async () => {
   //  await createDocumentTest(token);
   const testId = uuidv4();
   await createDocumentTestWithIdAndBody(token, testId, "thisIsABodyExample");
-  await modifyDocumentTest(token, testId + "asdf", "thisIsAModifiedBody");
-  await deleteDocumentTest(token, testId + "asdf");
+  await modifyDocumentTest(token, testId, "thisIsAModifiedBody");
+  await deleteDocumentTest(token, testId);
+  await logoutTest(token);
 };
 
 testing();

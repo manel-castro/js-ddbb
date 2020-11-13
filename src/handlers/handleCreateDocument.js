@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 
 const { getFileData, appendDataOnFile } = require("../managers/fileManager");
-const { decodeToken, authToken } = require("../managers/tokenManager");
+const { authToken } = require("../managers/tokenManager");
 
 const { encryptionConstants } = require("../constants/encryptionConstants");
 const { ddbbConstants } = require("../constants/ddbbConstants");
@@ -15,7 +15,7 @@ const handleCreateDocument = async (req, res) => {
   let authorized;
 
   try {
-    authorized = await authToken(utf8)
+    authorized = await authToken(utf8);
   } catch (err) {
     res.status(err.code).send(err.message);
     return;
@@ -43,10 +43,9 @@ const handleCreateDocument = async (req, res) => {
       .randomBytes(encryptionConstants.DOCUMENT_DEFAULT_ID_LENGTH)
       .toString("hex");
   } else {
-
-    const idAlreadyExists = fileData.some(item => item.id === documentId)
+    const idAlreadyExists = fileData.some((item) => item.id === documentId);
     if (idAlreadyExists) {
-      res.status(ID_ALREADY_EXISTS.code).send(ID_ALREADY_EXISTS.message)
+      res.status(ID_ALREADY_EXISTS.code).send(ID_ALREADY_EXISTS.message);
       return;
     }
   }

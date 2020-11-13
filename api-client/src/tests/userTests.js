@@ -1,8 +1,10 @@
-const { login, createAccount } = require("../index.js");
+const { login, createAccount, logout } = require("../index.js");
 
 console.log("____TESTS____");
 
 exports.loginTest = async (email, password, callback) => {
+  // Callback to get the token from tests.js
+  //
   console.log("LOG IN TESTS");
   // SET EXPECTED RESULT
   const resMessage = (message) => {
@@ -85,6 +87,19 @@ exports.createAccountTest = async (email, password) => {
       resMessage(res.data.message);
 
       resToken(res.data.token);
+    }
+  });
+};
+exports.logoutTest = async (token) => {
+  console.log("LOG IN TESTS");
+
+  // PERFORM THE TEST
+  const data = { token: token + "1a" };
+  await logout(data, function (err, res) {
+    if (err) {
+      console.log(err.data);
+    } else {
+      console.log(res.data.message);
     }
   });
 };
