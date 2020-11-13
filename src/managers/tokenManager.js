@@ -7,6 +7,8 @@ const { encryptionConstants } = require("../constants/encryptionConstants");
 const { ddbbConstants } = require("../constants/ddbbConstants");
 const { errorConstants } = require("../constants/errorConstants");
 
+// TODO. It seems that this token manager allow certain margin for error on checking slightly different tokens. 
+
 exports.createTempToken = async (email) => {
   // TOKEN DATA CREATION
   const dateToday = new Date(Date.now());

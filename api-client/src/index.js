@@ -27,24 +27,26 @@ module.exports = {
 
     const axiosRequest = {
       method: "post",
-      url: "http://localhost:8081/users/login",
+      url: api,
       data: {},
       headers: {"Authorization": credentials }, //prettier-ignore
     };
 
     await axios(axiosRequest)
       .then((res) => {
-        console.log("RES: ", res);
+        //    console.log("RES: ", res);
         callback(null, res);
       })
       .catch((err) => {
-        console.log("ERR: ", err);
+        //  console.log("ERR: ", err);
         callback(err.response);
       });
   },
 
-  createAccount: async (email, password) => {
-    const api = constants.apiConstants.apiKey + "users/login";
+  createAccount: async (data, callback) => {
+    const email = data.email;
+    const password = data.password;
+    const api = constants.apiConstants.apiKey + "users/createAccount";
 
     // SET UP CREDENTIALS HEADER
     const hashedPass = await crypto
@@ -61,8 +63,93 @@ module.exports = {
       headers: {"Authorization": credentials }, //prettier-ignore
     };
 
-    axios(axiosRequest)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    await axios(axiosRequest)
+      .then((res) => {
+        //        console.log("RES: ", res);
+        callback(null, res);
+      })
+      .catch((err) => {
+        //      console.log("ERR: ", err);
+        callback(err.response);
+      });
+  },
+
+  createDocument: async (data, callback) => {
+    const token = data.token;
+    const id = data.id || undefined;
+    const body = data.body || "";
+    const api = constants.apiConstants.apiKey + "documents";
+
+    const axiosRequest = {
+      method: "put",
+      url: api,
+      data: {
+        "id": id, //prettier-ignore
+        "body": body, //prettier-ignore
+      },
+      headers:{"Authorization": token}, //prettier-ignore
+    };
+
+    await axios(axiosRequest)
+      .then((res) => {
+        callback(null, res);
+      })
+      .catch((err) => {
+        callback(err.response);
+      });
+  },
+  modifyDocument: async (data, callback) => {
+    const token = data.token;
+    const id = data.id || undefined;
+    if (id === undefined) {
+      callback({ code: 401, message: "Specify a document Id" });
+      return;
+    }
+    const body = data.body || "";
+    const api = constants.apiConstants.apiKey + "documents";
+
+    const axiosRequest = {
+      method: "patch",
+      url: api,
+      data: {
+        "id": id, //prettier-ignore
+        "body": body, //prettier-ignore
+      },
+      headers:{"Authorization": token}, //prettier-ignore
+    };
+
+    await axios(axiosRequest)
+      .then((res) => {
+        callback(null, res);
+      })
+      .catch((err) => {
+        callback(err.response);
+      });
+  },
+  deleteDocument: async (data, callback) => {
+    const token = data.token;
+    const id = data.id || undefined;
+    if (id === undefined) {
+      callback({ code: 401, message: "Specify a document Id" });
+      return;
+    }
+    const api = constants.apiConstants.apiKey + "documents";
+
+    const axiosRequest = {
+      method: "delete",
+      url: api,
+      data: {
+        "id": id, //prettier-ignore
+      },
+      headers:{"Authorization": token}, //prettier-ignore
+    };
+
+    await axios(axiosRequest)
+      .then((res) => {
+        callback(null, res);
+      })
+      .catch((err) => {
+        callback(err.response);
+      });
   },
 };
