@@ -125,6 +125,29 @@ module.exports = {
       });
   },
 
+  accessDocument: async (data, callback) => {
+    const token = data.token;
+    const id = data.id;
+    const api = constants.apiConstants.apiKey + "documents";
+
+    const axiosRequest = {
+      method: "get",
+      url: api,
+      data: {
+        "id": id, //prettier-ignore
+      },
+      headers:{"Authorization": token}, //prettier-ignore
+    };
+
+    await axios(axiosRequest)
+      .then((res) => {
+        callback(null, res);
+      })
+      .catch((err) => {
+        callback(err.response);
+      });
+  },
+
   modifyDocument: async (data, callback) => {
     const token = data.token;
     const id = data.id || undefined;

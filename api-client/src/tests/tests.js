@@ -3,6 +3,7 @@ const { loginTest, createAccountTest, logoutTest } = require("./userTests");
 const {
   createDocumentTestWithIdAndBody,
   createDocumentTest,
+  accessDocumentWithId,
   modifyDocumentTest,
   deleteDocumentTest,
 } = require("./documentTests");
@@ -29,7 +30,18 @@ const testing = async () => {
 
   //  await createDocumentTest(token);
   const testId = uuidv4();
-  await createDocumentTestWithIdAndBody(token, testId, "thisIsABodyExample");
+
+  const objectDocument = {
+    openPrice: 1325,
+    closePrice: 1,
+  };
+
+  await createDocumentTestWithIdAndBody(
+    token,
+    testId,
+    JSON.stringify(objectDocument)
+  );
+  await accessDocumentWithId(token, testId);
   await modifyDocumentTest(token, testId, "thisIsAModifiedBody");
   await deleteDocumentTest(token, testId);
   await logoutTest(token);

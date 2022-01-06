@@ -4,10 +4,12 @@ const cors = require("cors");
 const { serverConstants } = require("./src/constants/serverConstants");
 const handleUser = require("./src/handlers/handleUser");
 const handleDocument = require("./src/handlers/handleDocument");
+const bodyParser = require("body-parser");
 
 app.use(cors());
 
-app.use(express.json());
+app.use(bodyParser({ limit: "50mb" }));
+// app.use(express.json());
 
 app.get("/", (req, res) => res.send("Created by Manel Castro."));
 app.use("/users", handleUser);
