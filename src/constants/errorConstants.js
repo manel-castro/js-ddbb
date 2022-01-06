@@ -6,5 +6,6 @@ exports.errorConstants = {
   EMAIL_ALREADY_EXISTS: { code: 412, message: "Email already exists." },
   BODY_REQUEST_MISSING: { code: 412, message: "Body request is missing." },
   TOKEN_EXPIRED: { code: 401, message: "Token expired, log in again." },
-  ID_ALREADY_EXISTS: { code: 400, message: "The id doesn't meet our criteria, left it empty to autogenerate it." }
+  ID_ALREADY_EXISTS: { code: 400, message: "The id doesn't meet our criteria, left it empty to autogenerate it." },
+  ID_MISSING_FIELD: { code: 400, message: "The document id field is empty." }
 };
